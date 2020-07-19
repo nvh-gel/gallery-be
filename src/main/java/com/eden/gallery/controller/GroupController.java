@@ -20,19 +20,19 @@ public class GroupController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GroupController.class);
 
-    private GroupRepository groupRepository;
+    private final GroupRepository groupRepository;
 
     public GroupController(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
     }
 
     @GetMapping("/groups")
-    Collection<Group> groups() {
+    public Collection<Group> groups() {
         return groupRepository.findAll();
     }
 
     @GetMapping("/group/{id}")
-    ResponseEntity<?> getGroup(@PathVariable Long id){
+    public ResponseEntity<Group> getGroup(@PathVariable Long id){
         Optional<Group> groupOpt = groupRepository.findById(id);
 
         return groupOpt.map(response -> ResponseEntity.ok().body(response))
@@ -40,7 +40,7 @@ public class GroupController {
     }
 
     @PostMapping("/group")
-    ResponseEntity<Group> createGroup(@Valid @RequestBody Group group) throws URISyntaxException {
+    public ResponseEntity<Group> createGroup(@Valid @RequestBody Group group) throws URISyntaxException {
         LOGGER.info("Create new group: {}", group);
 
         Group result = groupRepository.save(group);
@@ -48,16 +48,16 @@ public class GroupController {
                 .body(result);
     }
 
-    @PutMapping("/group/{id}")
-    ResponseEntity<Group> updateGroup(@Valid @RequestBody Group group) {
+    @PutMapping("/group")
+    public ResponseEntity<Group> updateGroup(@Valid @RequestBody Group group) {
         LOGGER.info("Updating group: {}", group);
 
         Group result = groupRepository.save(group);
         return ResponseEntity.ok().body(result);
     }
 
-    @DeleteMapping("/group{id}")
-    ResponseEntity<?> deleteGroup(@PathVariable Long id) {
+    @DeleteMapping("/group/{id}")
+    public ResponseEntity<Group> deleteGroup(@PathVariable Long id) {
         LOGGER.info("Deleting group id: {}", id);
 
         groupRepository.deleteById(id);
